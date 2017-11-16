@@ -79,7 +79,7 @@ namespace gpu_stl{
                 return *this;
             }
             __device__ bool operator ==(const iterator &iter){
-                return ptr == iter.ptr;=
+                return ptr == iter.ptr;
             }
             __device__ bool operator !=(const iterator &iter){
                 return ptr != iter.ptr;
@@ -141,14 +141,14 @@ namespace gpu_stl{
             tail.ptr->next = NULL;
             --length;
         }
-        __device__ iterator& insert(iterator iter, const T&val){
+        __device__ iterator insert(iterator iter, const T&val){
             if(!iter.ptr || iter == tail){
                 this->push_back(val);
                 return iterator(tail.ptr->prev);
             }
             if(iter == head){
-                this_>push_front(val);
-                return this->begin();
+                this->push_front(val);
+                return head;
             }
             ListNode *tmp = new ListNode(val, iter.ptr->prev, iter.ptr);
             tmp->prev->next = tmp;
@@ -156,11 +156,11 @@ namespace gpu_stl{
             ++length;
             return iterator(tmp);
         }
-        __device__ iteraotr& erase(iterator iter){
+        __device__ iterator erase(iterator iter){
             if(!iter.ptr || iter == tail) return iter;
             if(iter == head){
                 this->pop_front();
-                return this->begin();
+                return head;
             }
             iter.ptr->prev->next = iter.ptr->next;
             iter.ptr->next->prev = iter.ptr->prev;
@@ -178,7 +178,7 @@ namespace gpu_stl{
                 right = right->prev;
             }
         }
-        __device__ iterator& find(const T&val){
+        __device__ iterator find(const T&val){
             iterator p;
             for(p=this->begin();p!=this->end()&&p.ptr->val!=val;++p);
             return p;
