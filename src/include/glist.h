@@ -4,10 +4,10 @@
 
 namespace gpu_stl{
     /*
-    Here I implement a gpu version of stl linked list,
+    Here I implement a gpu version of stl linked list using pointers,
     which contains:
         struct ListNode
-        sturct iterator
+        struct iterator
     and member functions:
         empty()
         size()
