@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../include/glist.hpp"
+#include "../include/glist.h"
 #include <thrust/device_vector.h>
 #define def_dvec(t) thrust::device_vector<t>
 #define to_ptr(x) thrust::raw_pointer_cast(&x[0])
@@ -47,6 +47,14 @@ __global__ void test(float *output){
     list.pop_back();
     output[idx++] = 10086;
     for(auto p=list.begin(); p!=list.end();++p) output[idx++] = *p;
+    gpu_stl::list<float>::iterator p1(--list.end());
+    output[idx++] = 10086;
+    output[idx++] = *p1;
+    list.clear();
+    output[idx++] = 10086;
+    output[idx++] = list.empty();
+    output[idx++] = 10086;
+    output[idx++] = list.size();
 }
 
 int main(){

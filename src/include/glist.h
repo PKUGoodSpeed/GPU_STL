@@ -23,6 +23,7 @@ namespace gpu_stl{
         find(val)
         erase(iterator)
         reverse()
+        clear()
     So far the sort() function and mergeSort() function does not work properly.
     */
     template<typename T>
@@ -181,6 +182,15 @@ namespace gpu_stl{
             iterator p;
             for(p=this->begin();p!=this->end()&&p.ptr->val!=val;++p);
             return p;
+        }
+        __device__ void clear(){
+            for(auto p=head.ptr->next;p;p=p->next) delete p->prev;
+            head = tail;
+            length = 0;
+        }
+        __device__ ~list(){
+            for(auto p=head.ptr->next;p;p=p->next) delete p->prev;
+            delete tail.ptr;
         }
     };
 }
