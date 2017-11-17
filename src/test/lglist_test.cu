@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../include/glist.h"
+#include "../include/lglist.h"
 #include <thrust/device_vector.h>
 #define def_dvec(t) thrust::device_vector<t>
 #define to_ptr(x) thrust::raw_pointer_cast(&x[0])
@@ -7,8 +7,10 @@ using namespace std;
 
 
 __global__ void test(float *output){
-    gpu_stl::list<float> list;
+    gpu_linearized_stl::list<float,100> list;
     int idx = 0;
+    output[idx++] = list.max_size();
+    output[idx++] = list.full();
     output[idx++] = (float)list.empty();
     output[idx++] = (float)list.size();
     for(int i=0;i<10;++i){
@@ -17,48 +19,33 @@ __global__ void test(float *output){
         output[idx++] = (float)list.size();
     }
     for(int i=0;i<6;++i) {
-        auto p = list.insert(--list.end(), 55);
-        ++p;
-        ++p;
+        int a = list.end();
+        auto p = list.insert(list.decrement(a), 55);
+        list.decrement(p);
+        list.decrement(p);
         list.insert(p, 77);
     }
-    for(auto p=list.begin(); p!=list.end();++p) output[idx++] = *p;
+    for(auto p=list.begin(); p!=list.end();list.increment(p)) output[idx++] = list.at(p);
     output[idx++] = list.front();
-    output[idx++] = *list.begin();
-    *list.begin() = 3.1415926;
-    output[idx++] = list.front();
-    output[idx++] = *list.begin();
-    output[idx++] = 10086;
     output[idx++] = list.back();
-    output[idx++] = *(--list.end());
-    *(--list.end()) = 3.124235;
-    output[idx++] = list.back();
-    output[idx++] = *(--list.end());
-    gpu_stl::list<float>::iterator p;
+    int p;
     while((p=list.find(77))!=list.end()){
         list.erase(p);
     }
     output[idx++] = 10086;
-    for(auto p=list.begin(); p!=list.end();++p) output[idx++] = *p;
+    for(auto p=list.begin(); p!=list.end();list.increment(p)) output[idx++] = list.at(p);
     list.reverse();
     output[idx++] = 10086;
-    for(auto p=list.begin(); p!=list.end();++p) output[idx++] = *p;
+    for(auto p=list.begin(); p!=list.end();list.increment(p)) output[idx++] = list.at(p);
     list.pop_front();
     list.pop_back();
+    list.pop_back();
     output[idx++] = 10086;
-    for(auto p=list.begin(); p!=list.end();++p) output[idx++] = *p;
-    gpu_stl::list<float>::iterator p1(--list.end());
-    output[idx++] = 10086;
-    output[idx++] = *p1;
-    list.clear();
-    output[idx++] = 10086;
-    output[idx++] = list.empty();
-    output[idx++] = 10086;
-    output[idx++] = list.size();
+    for(auto p=list.begin(); p!=list.end();list.increment(p)) output[idx++] = list.at(p);
 }
 
 int main(){
-    def_dvec(float) dev_out(120, 0);
+    def_dvec(float) dev_out(150, 0);
     test<<<1, 1>>>(to_ptr(dev_out));
     for(auto k:dev_out) cout<<k<<' ';
     cout<<endl;
