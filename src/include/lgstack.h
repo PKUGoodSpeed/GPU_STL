@@ -8,9 +8,11 @@ namespace gpu_linearized_stl{
     This stack contains the following member functions:
         empty();
         size();
+        max_size();
         top();
         push(g);
         pop();
+        pop_k();
     */
     template<typename T, const int MAX_SIZE = 128>
     struct stack{
@@ -40,6 +42,9 @@ namespace gpu_linearized_stl{
         __device__ void pop(){
             assert(stk_size);
             --stk_size;
+        }
+        __device__ void pop_k(const int &k){
+            stk_size -= min(stk_size, k);
         }
     };
 }

@@ -2,7 +2,7 @@ NVCC = /usr/local/cuda-8.0/bin/nvcc
 FLAGS = -std=c++11 -arch=sm_35 -O3 -lcudart -lcublas -lcublas_device -lcudadevrt
 BIN = apps
 
-all: mkfolder glist gstack gqueue gdeque lglist lgstack
+all: mkfolder glist gstack gqueue gdeque lglist lgstack lgqueue
 
 glist: mkfolder glist_test.cu
 	$(NVCC) $(FLAGS) glist_test.cu -o $(BIN)/glist
@@ -21,6 +21,9 @@ lglist: mkfolder lglist_test.cu
 	
 lgstack: mkfolder lgstack_test.cu
 	$(NVCC) $(FLAGS) lgstack_test.cu -o $(BIN)/lgstack
+
+lgqueue: mkfolder lgqueue_test.cu
+	$(NVCC) $(FLAGS) lgqueue_test.cu -o $(BIN)/lgqueue
 
 mkfolder:
 	if [ ! -d "./$(BIN)" ];then     \
