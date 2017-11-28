@@ -24,7 +24,7 @@ __global__ void test(float *output){
         output[idx++] = que.size();
         output[idx++] = que.front();
         output[idx++] = que.back();
-        que.pop();
+        que.pop_k(2);
     }
 }
 

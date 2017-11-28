@@ -50,6 +50,9 @@ namespace gpu_linearized_stl{
         __device__ void pop_k(const int&k){
             start = min(end, start+k);
         }
+        __device__ void clear(){
+            start = end = 0;
+        }
     };
 }
 

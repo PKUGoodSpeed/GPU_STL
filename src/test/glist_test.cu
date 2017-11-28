@@ -55,11 +55,13 @@ __global__ void test(float *output){
     output[idx++] = list.empty();
     output[idx++] = 10086;
     output[idx++] = list.size();
+    output[idx++] = max(123141, 2335436);
+    printf("Hello from block %d, thread %d\n", blockIdx.x, threadIdx.x);
 }
 
 int main(){
     def_dvec(float) dev_out(120, 0);
-    test<<<1, 1>>>(to_ptr(dev_out));
+    test<<<10, 10>>>(to_ptr(dev_out));
     for(auto k:dev_out) cout<<k<<' ';
     cout<<endl;
     return 0;
